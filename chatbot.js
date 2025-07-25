@@ -29,18 +29,11 @@ form.addEventListener("submit", function (event) {
 });
 
 function GrokChatBot(question, str_time) {
-  // Local API key for testing—DO NOT COMMIT THIS!
-  const apiKey = "";
-  if (!apiKey) {
-    console.error("API key not set! Add your xAI API key.");
-    return;
-  }
-
+  const proxyUrl = '/api/proxy'; // Vercel function path
   const options = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       messages: [
@@ -52,15 +45,15 @@ function GrokChatBot(question, str_time) {
         { role: "user", content: question },
       ],
       model: "grok-4", // Using grok-4 as per your docs check
-      stream: true, // Test this—fallback if unsupported
+      stream: true, // Enable streaming for live typing
       temperature: 0.7, // Added for variety
     }),
   };
 
-  fetch("https://api.x.ai/v1/chat/completions", options)
+  fetch(proxyUrl, options)
     .then((response) => {
       if (!response.ok || !response.body) {
-        throw new Error(`API failed: ${response.status} ${response.statusText}`);
+        throw new Error(`Proxy failed: ${response.status} ${response.statusText}`);
       }
       return response.body;
     })
@@ -127,7 +120,6 @@ function scrollToBottom() {
   const messageBody = document.getElementById("messageFormeight");
   messageBody.scrollTop = messageBody.scrollHeight;
 }
-
 
 // Audio Toggle Functionality
 const audio = document.getElementById('background-music');
