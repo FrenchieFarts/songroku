@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/*.js": {
-      "includeFiles": ["api/**", ".env"]
+      "includeFiles": "api/**,.env"
     }
   },
   "builds": [
