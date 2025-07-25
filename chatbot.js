@@ -6,10 +6,10 @@ form.addEventListener("submit", function (event) {
   const date = new Date();
   const hour = date.getHours();
   const minute = date.getMinutes();
-  const str_time = `${hour}:${minute}`; // Template literal for cleaner string
+  const str_time = `${hour}:${minute}`;
 
   const userQuestion = document.getElementById("text");
-  const question = userQuestion.value.trim(); // Trim whitespace
+  const question = userQuestion.value.trim();
 
   const messageFormeight = document.getElementById("messageFormeight");
 
@@ -29,11 +29,11 @@ form.addEventListener("submit", function (event) {
 });
 
 function GrokChatBot(question, str_time) {
-  const proxyUrl = '/api/proxy'; // Vercel function path
+  const proxyUrl = '/api/proxy';
   const options = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       messages: [
@@ -44,20 +44,28 @@ function GrokChatBot(question, str_time) {
         },
         { role: "user", content: question },
       ],
-      model: "grok-4", // Using grok-4 as per your docs check
-      stream: true, // Enable streaming for live typing
-      temperature: 0.7, // Added for variety
+      model: "grok-4",
+      temperature: 0.7,
     }),
   };
 
   fetch(proxyUrl, options)
     .then((response) => {
-      if (!response.ok || !response.body) {
-        throw new Error(`Proxy failed: ${response.status} ${response.statusText}`);
-      }
-      return response.body;
+      if (!response.ok) throw new Error(`Proxy failed: ${response.status}`);
+      return response.json();
     })
-    .then((res) => readStream(res, str_time))
+    .then((data) => {
+      const messageFormeight = document.getElementById("messageFormeight");
+      const botHtml = document.createElement("div");
+      let content = data.choices?.[0]?.message?.content || "No response from the Saiyan oracle!";
+      botHtml.innerHTML = `
+        <div class="d-flex justify-content-start mb-4">
+          <div class="img_cont_msg"><img src="/assets/songroku-pfp.jpeg" class="rounded-circle user_img_msg"></div>
+          <div class="msg_cotainer">${content}<span class="msg_time">${str_time}</span></div>
+        </div>`;
+      messageFormeight.appendChild(botHtml);
+      scrollToBottom();
+    })
     .catch((err) => {
       console.error(err);
       const messageFormeight = document.getElementById("messageFormeight");
@@ -67,53 +75,6 @@ function GrokChatBot(question, str_time) {
       messageFormeight.appendChild(errorHtml);
       scrollToBottom();
     });
-}
-
-async function readStream(stream, str_time) {
-  let message = "";
-  const botHtml = document.createElement("div");
-
-  const reader = stream.getReader();
-  let done = false;
-  let appended = false;
-
-  while (!done) {
-    const { value, done: isDone } = await reader.read();
-    if (isDone) break;
-
-    let str = new TextDecoder().decode(value);
-    let arr = str.split("\n\n");
-
-    arr.forEach((ele) => {
-      if (ele.includes("content")) {
-        let data = ele.split("data: ");
-        data.forEach((res) => {
-          if (res.includes("content")) {
-            try {
-              res = JSON.parse(res);
-              let content = res.choices[0].delta.content.replace(/\n/g, "<br>");
-              message += content;
-            } catch (e) {
-              console.warn("Parsing error:", e);
-            }
-          }
-        });
-      }
-    });
-
-    botHtml.innerHTML = `
-      <div class="d-flex justify-content-start mb-4">
-        <div class="img_cont_msg"><img src="/assets/songroku-pfp.jpeg" class="rounded-circle user_img_msg"></div>
-        <div class="msg_cotainer">${message}<span class="msg_time">${str_time}</span></div>
-      </div>`;
-
-    scrollToBottom();
-
-    if (!appended && message) {
-      messageFormeight.appendChild(botHtml);
-      appended = true;
-    }
-  }
 }
 
 function scrollToBottom() {
@@ -135,7 +96,6 @@ toggleButton.addEventListener('click', () => {
   }
 });
 
-// Fallback to start audio if autoplay is blocked
 toggleButton.addEventListener('click', () => {
   if (audio.paused && !audio.muted) {
     audio.play().catch(error => console.log("Autoplay blocked:", error));

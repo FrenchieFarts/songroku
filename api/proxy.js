@@ -4,7 +4,10 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'API key not set' });
   }
 
-  const { messages, model, temperature } = req.body;
+  const { messages, model, temperature } = req.body || {};
+  if (!messages || !model) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
 
   const options = {
     method: 'POST',
@@ -15,7 +18,6 @@ export default async function handler(req, res) {
     body: JSON.stringify({
       messages,
       model,
-      stream: true,
       temperature,
     }),
   };
@@ -24,25 +26,8 @@ export default async function handler(req, res) {
     const response = await fetch('https://api.x.ai/v1/chat/completions', options);
     if (!response.ok) throw new Error(`API error: ${response.status}`);
 
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-
-    const stream = response.body;
-    const reader = stream.getReader();
-    let done = false;
-
-    while (!done) {
-      const { value, done: isDone } = await reader.read();
-      if (isDone) break;
-      const chunk = new TextDecoder().decode(value);
-      chunk.split('\n\n').forEach(line => {
-        if (line.trim()) {
-          res.write(`data: ${line}\n\n`); // SSE format
-        }
-      });
-    }
-    res.end();
+    const data = await response.json();
+    res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
