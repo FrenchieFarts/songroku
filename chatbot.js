@@ -49,22 +49,39 @@ function GrokChatBot(question, str_time) {
     }),
   };
 
+  const messageFormeight = document.getElementById("messageFormeight");
+  const botHtml = document.createElement("div");
+  botHtml.innerHTML = `
+    <div class="d-flex justify-content-start mb-4">
+      <div class="img_cont_msg"><img src="/assets/songroku-pfp.jpeg" class="rounded-circle user_img_msg"></div>
+      <div class="msg_cotainer" id="botMessage"><span class="msg_time">${str_time}</span></div>
+    </div>`;
+  messageFormeight.appendChild(botHtml);
+  scrollToBottom();
+
   fetch(proxyUrl, options)
     .then((response) => {
       if (!response.ok) throw new Error(`Proxy failed: ${response.status}`);
-      return response.json();
-    })
-    .then((data) => {
-      const messageFormeight = document.getElementById("messageFormeight");
-      const botHtml = document.createElement("div");
-      let content = data.choices?.[0]?.message?.content || "No response from the Saiyan oracle!";
-      botHtml.innerHTML = `
-        <div class="d-flex justify-content-start mb-4">
-          <div class="img_cont_msg"><img src="/assets/songroku-pfp.jpeg" class="rounded-circle user_img_msg"></div>
-          <div class="msg_cotainer">${content}<span class="msg_time">${str_time}</span></div>
-        </div>`;
-      messageFormeight.appendChild(botHtml);
-      scrollToBottom();
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      const botMessage = document.getElementById("botMessage");
+      let content = '';
+
+      function readStream() {
+        reader.read().then(({ done, value }) => {
+          if (done) return;
+          const chunk = decoder.decode(value, { stream: true });
+          content += chunk;
+          botMessage.innerHTML = `${content}<span class="msg_time">${str_time}</span>`;
+          scrollToBottom();
+          readStream();
+        }).catch((err) => {
+          console.error('Stream error:', err);
+          botMessage.innerHTML = `Error: My Saiyan circuits crashed! Try again.<span class="msg_time">${str_time}</span>`;
+          scrollToBottom();
+        });
+      }
+      readStream();
     })
     .catch((err) => {
       console.error(err);

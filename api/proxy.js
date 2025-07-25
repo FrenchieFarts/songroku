@@ -10,7 +10,6 @@ export default async function handler(req, res) {
   const { messages, model, temperature } = req.body || {};
   console.log('Received request body:', JSON.stringify({ messages, model, temperature }));
   if (!messages || !model) {
-    console.error('Invalid request body:', { messages, model, temperature });
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -24,18 +23,23 @@ export default async function handler(req, res) {
       messages,
       model,
       temperature,
+      stream: true, // Enable streaming
     }),
   };
 
   try {
-    console.log('Sending request to xAI API:', options);
     const response = await fetch('https://api.x.ai/v1/chat/completions', options);
     console.log('xAI API response status:', response.status);
     if (!response.ok) throw new Error(`API error: ${response.status} - ${response.statusText}`);
 
-    const data = await response.json();
-    console.log('xAI API response data:', JSON.stringify(data));
-    res.status(200).json(data);
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    for await (const chunk of response.body) {
+      res.write(chunk.toString()); // Forward raw chunks
+    }
+    res.end();
   } catch (error) {
     console.error('Error during fetch:', error.message, error.stack);
     res.status(500).json({ error: error.message });
