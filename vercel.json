@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/*.js": {
+      "includeFiles": "api/**,.env.local"
+    }
+  },
+  "env": {
+    "XAI_API_KEY": "@xai_api_key"
+  }
+}
