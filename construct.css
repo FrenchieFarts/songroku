@@ -1,0 +1,28 @@
+body {
+  background: #1a1a1a;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding-top: 50px;
+}
+
+.construction {
+  font-size: 4em;
+  color: #c0966a;
+  text-shadow: 0 0 10px #ff4500;
+}
+
+.warning {
+  font-size: 1.5em;
+  color: #83c9d2;
+}
+
+.spinner {
+  font-size: 2em;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
