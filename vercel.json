@@ -3,15 +3,5 @@
     "api/*.js": {
       "includeFiles": "api/**,.env"
     }
-  },
-  "builds": [
-    {
-      "src": "api/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "*.html",
-      "use": "@vercel/static"
-    }
-  ]
+  }
 }
