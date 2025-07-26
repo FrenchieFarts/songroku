@@ -26,9 +26,8 @@ body,html{
 }
 .msg_card_body{
 	overflow-y: auto;
-	/* Custom scrollbar styles */
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: #58cc71 #333; /* Firefox: thumb, track */
+	scrollbar-width: thin; /* Firefox */
+	scrollbar-color: #58cc71 #333; /* Firefox: thumb, track */
 }
 
 .msg_card_body::-webkit-scrollbar {
@@ -247,6 +246,7 @@ border-radius: 0 0 15px 15px !important;
 @media(max-width: 1024px){
 	.xai-credits {
 		padding: 0 30px;
+		font-size: 30px;
 	}
 	.contacts_card{
 		margin-bottom: 15px !important;
@@ -257,6 +257,24 @@ border-radius: 0 0 15px 15px !important;
 	}
 
 	.card {
-		height: 600px;
+		height: 1000px;
+	}
+
+	.user_info span{
+		font-size: 35px;
+	}
+
+	.user_info p{
+		font-size: 25px;
+	}
+
+	.type_msg::placeholder, .type_msg {
+		font-size: 30px !important;
+	}
+
+	.msg_cotainer_send, .msg_cotainer {
+		font-size: 20px;
+		color: #142466;
+    	font-weight: bold;
 	}
 }

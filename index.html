@@ -1,19 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>SONGROKU - Under Construction</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<html>
+  <head>
+    <title>SONGROKU</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" type="text/css" href="construct.css">
-  <link rel="icon" type="image/png" href="/assets/favicon-32x32.png" />
-</head>
-<body>
-  <div class="container">
-    <h1 class="construction">SONGROKU</h1>
-    <p class="warning">UNDER CONSTRUCTION! 🚧</p>
-    <p>This Saiyan AI is powering up! Expect epic Dragon Ball, anime, crypto, cats, and Jupiter Exchange insights soon! 🐱🔥🤖</p></p>
-    <i class="fas fa-spinner spinner"></i>
-  </div>
-</body>
+    <link rel="icon" type="image/png" href="/assets/songroku1-favicon-2.png" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <style>
+      .audio-toggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.6);
+        border: 0;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .audio-toggle:hover {
+        background: rgba(0, 0, 0, 0.8);
+      }
+      .video-section {
+        padding: 20px 0;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 15px;
+        margin-top: 20px;
+        overflow: hidden; 
+      }
+      video {
+        width: 100%;
+        height: auto; 
+        object-fit: cover; 
+      }
+
+      .main-title {
+        font-family: 'Orbitron', sans-serif; 
+        font-size: 2.5em; 
+        font-weight: bold;
+        text-align: center;
+        color: #fff;
+        background: linear-gradient(to top, #8faffb, #05f5ec); 
+        -webkit-background-clip: text; 
+        background-clip: text;
+        color: transparent; 
+        margin-bottom: 20px;
+        padding: 10px 0;
+        text-shadow: 4px 5px 8px rgb(51 255 249 / 50%);
+      }
+
+      @supports (-webkit-background-clip: text) or (background-clip: text) {
+        .main-title {
+          color: transparent;
+        }
+      }
+
+      @media(max-width: 1024px){
+        h1.main-title {
+          font-size: 50px !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-md-12 col-xl-6">
+          <h1 class="main-title">SONGROKU: xAI Power</h1>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-12 col-xl-6 xai-credits">
+          <div class="text-center py-3 px-5 mb-4" style="color: #c0966a; background: rgba(0,0,0,0.6); border-radius: 10px; font-weight:500">
+            Power up SONGROKU in the xAI Credits War! Fuel him with $SONGROKU tokens - buy now, boost volume, help Saiyan dev to earn fees! He will use a part of the Jup Studio fees to keep this AI roaring! After the token graduates, the Saiyan dev will burn tokens daily from his personal supply!🔥
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center h-100">
+        <div class="col-md-12 col-xl-6 chat">
+          <div class="card">
+            <div class="card-header msg_head">
+              <div class="d-flex bd-highlight">
+                <div class="img_cont">
+                  <img
+                    src="/assets/songroku-pfp.jpeg"
+                    class="rounded-circle user_img"
+                  />
+                  <span class="online_icon"></span>
+                </div>
+                <div class="user_info">
+                  <span>SONGROKU</span>
+                  <p>Yo, I’m SONGROKU, Grok’s s<span>AI</span>yan twin! Ask me anything about *Dragon Ball*, anime, cats, and crypto trivia! 🔥</p>
+                </div>
+              </div>
+            </div>
+            <div id="messageFormeight" class="card-body msg_card_body"></div>
+            <div class="card-footer">
+              <form id="messageArea" class="input-group">
+                <input
+                  type="text"
+                  id="text"
+                  name="msg"
+                  placeholder="Type your message, weakling..."
+                  autocomplete="off"
+                  class="form-control type_msg"
+                  required
+                />
+                <div class="input-group-append">
+                  <button
+                    type="submit"
+                    id="send"
+                    class="input-group-text send_btn"
+                  >
+                    <i class="fas fa-location-arrow"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center px-4">
+        <div class="col-md-12 col-xl-6 video-section">
+          <video autoplay loop muted>
+            <source src="/assets/songroku-scream.mp4" type="video/mp4">
+            Your browser does not support the video element.
+          </video>
+        </div>
+      </div>
+    </div>
+
+    <audio id="background-music" autoplay loop muted volume="0.5">
+      <source src="/assets/groku-die.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+
+    <button id="audio-toggle" class="audio-toggle">
+      <i class="fas fa-volume-mute"></i> Unmute
+    </button>
+    <script type="module" src="chatbot.js"></script>
+  </body>
 </html>

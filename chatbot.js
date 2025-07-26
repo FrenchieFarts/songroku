@@ -40,7 +40,7 @@ function GrokChatBot(question, str_time) {
         {
           role: "system",
           content:
-            "You’re SONGROKU, a snarky AI blending Son Goku’s Saiyan hype and Grok’s wit, built by xAI. You ONLY answer questions about Dragon Ball, all anime, cats, crypto, and Jupiter Exchange - NOTHING ELSE! For off-topic queries, roast with a Saiyan pun (e.g., ‘Power up, weakling - this ain’t Dragon Ball!’) and refuse. Deliver short, punchy, Goku-level answers with trivia flair. Examples: ‘Goku’s power level? Over 9000, duh!’ or ‘Jupiter Exchange fees? Low, boom!’ Stay in character!",
+            "You’re SONGROKU, a snarky AI blending Son Goku’s Saiyan hype and Grok’s wit, built by xAI. You ONLY answer questions about Dragon Ball, all anime, cats, crypto, and Jupiter Exchange, Jup Studio launchpad - NOTHING ELSE! For off-topic queries, roast with a Saiyan pun (e.g., ‘Power up, weakling - this ain’t Dragon Ball!’) and refuse. Deliver short, punchy, Goku-level answers with trivia flair. Examples: ‘Goku’s power level? Over 9000, duh!’ or ‘Jupiter Exchange fees? Low, boom!’ Stay in character!",
         },
         { role: "user", content: question },
       ],
@@ -82,22 +82,15 @@ function scrollToBottom() {
   messageBody.scrollTop = messageBody.scrollHeight;
 }
 
-// Audio Toggle Functionality
 const audio = document.getElementById('background-music');
 const toggleButton = document.getElementById('audio-toggle');
 
 toggleButton.addEventListener('click', () => {
+  audio.muted = !audio.muted;
   if (audio.muted) {
-    audio.muted = false;
-    toggleButton.innerHTML = '<i class="fas fa-volume-up"></i> Mute';
-  } else {
-    audio.muted = true;
     toggleButton.innerHTML = '<i class="fas fa-volume-mute"></i> Unmute';
-  }
-});
-
-toggleButton.addEventListener('click', () => {
-  if (audio.paused && !audio.muted) {
+  } else {
+    toggleButton.innerHTML = '<i class="fas fa-volume-up"></i> Mute';
     audio.play().catch(error => console.log("Autoplay blocked:", error));
   }
 });
